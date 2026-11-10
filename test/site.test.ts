@@ -75,6 +75,10 @@ describe("the static site", () => {
   it("serves vestlens.com through GitHub Pages", () => {
     expect(read("public/CNAME").trim()).toBe("vestlens.com");
   });
+
+  it("publishes the .well-known folder, which the Pages upload skips unless told to", () => {
+    expect(read(".github/workflows/pages.yml")).toMatch(/include-hidden-files: true/);
+  });
 });
 
 describe("TFSA room calculator page", () => {

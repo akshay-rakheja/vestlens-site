@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Set up VestLens · VestLens</title>
+    <meta name="description" content="What you need to run your own copy of VestLens, the open-source, read-only portfolio app for Wealthsimple accounts." />
+    <meta name="theme-color" content="#f4f7f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1a1f" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://vestlens.com/setup/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VestLens" />
+    <meta property="og:title" content="Set up VestLens" />
+    <meta property="og:description" content="What you need to run your own copy of VestLens, the open-source, read-only portfolio app for Wealthsimple accounts." />
+    <meta property="og:url" content="https://vestlens.com/setup/" />
+    <meta property="og:image" content="https://vestlens.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" src="/src/site.ts"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- header -->
+      <section class="hero small">
+        <h1>Set up VestLens</h1>
+        <p class="lede">You run your own copy of VestLens, connected to your own accounts through your own SnapTrade key.</p>
+      </section>
+
+      <div class="notice" role="note">
+        <strong>Coming soon.</strong>
+        <p>The open-source code is being prepared for release. This page will have the full steps and a link to the repository once it's published.</p>
+      </div>
+
+      <section>
+        <h2>What you'll need</h2>
+        <ul class="plain">
+          <li><strong>A computer or small server that runs Docker.</strong> VestLens starts with Docker Compose and keeps its data in its own database.</li>
+          <li><strong>A SnapTrade Personal key.</strong> It's free, it's for one person, and it covers your own accounts only. You'll copy its client ID and consumer key into your copy's settings file.</li>
+          <li><strong>Your Wealthsimple login</strong>, which you'll enter on SnapTrade's page when you connect, never in VestLens.</li>
+          <li><strong>A public HTTPS address, for Claude or ChatGPT.</strong> Both assistants reach connectors from their own servers, so a copy that only runs on your computer works in your browser but not in chat. A tunnel or a small cloud host gives you that address.</li>
+          <li><strong>Some comfort with a terminal.</strong> There's no installer.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What setup will look like</h2>
+        <ol class="steps">
+          <li><strong>Download VestLens</strong><p>Clone the repository from GitHub.</p></li>
+          <li><strong>Add your key</strong><p>Put your SnapTrade Personal key and a sign-in password in the settings file.</p></li>
+          <li><strong>Start it</strong><p>Run it with Docker Compose and sign in to your copy.</p></li>
+          <li><strong>Connect Wealthsimple</strong><p>Follow the link to SnapTrade's page and connect read-only.</p></li>
+          <li><strong>Add it to your assistant</strong><p>Add your copy's address as a custom connector in Claude or ChatGPT.</p></li>
+        </ol>
+        <p class="muted">This is an outline. The exact commands will be here when the code is published.</p>
+      </section>
+
+      <section>
+        <h2>Before you rely on the numbers</h2>
+        <p>Wealthsimple's transaction history through SnapTrade starts around April 2023, so all-time deposits and returns for older accounts are incomplete. <a href="/limitations/">Read the known limitations</a>.</p>
+      </section>
+
+      <!-- footer -->
+    </div>
+  </body>
+</html>

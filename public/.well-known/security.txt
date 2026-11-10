@@ -1,0 +1,4 @@
+Contact: mailto:support@vestlens.com
+Expires: 2027-11-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://vestlens.com/.well-known/security.txt

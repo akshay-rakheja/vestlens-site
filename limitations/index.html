@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Known limitations · VestLens</title>
+    <meta name="description" content="How far back Wealthsimple history goes through SnapTrade, and which VestLens figures that affects." />
+    <meta name="theme-color" content="#f4f7f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1a1f" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://vestlens.com/limitations/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VestLens" />
+    <meta property="og:title" content="Known limitations" />
+    <meta property="og:description" content="How far back Wealthsimple history goes through SnapTrade, and which VestLens figures that affects." />
+    <meta property="og:url" content="https://vestlens.com/limitations/" />
+    <meta property="og:image" content="https://vestlens.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" src="/src/site.ts"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- header -->
+      <section class="hero small">
+        <h1>Known limitations: how far back history goes</h1>
+        <p class="lede">VestLens reads your accounts through SnapTrade. Holdings and balances are current, but transaction history (deposits, withdrawals, trades and dividends) only goes back as far as SnapTrade can get it from your brokerage. For older accounts, that's usually later than the day the account opened.</p>
+      </section>
+
+      <section>
+        <h2>The Wealthsimple cut-off</h2>
+        <ul class="plain">
+          <li>SnapTrade says Wealthsimple limited how far back history goes when it moved to a new reporting system. The cut-off SnapTrade gives is <strong>around April 2023</strong>. In testing, some accounts reached a few months earlier, so treat the date as approximate.</li>
+          <li>Older transactions can't be recovered through SnapTrade, and VestLens has no other source for them.</li>
+          <li>SnapTrade's own guidance is that history often covers years and only sometimes goes back to the start of an account. A sync that finishes doesn't prove the history is complete.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>What to expect</h2>
+        <p>If your account is older than the cut-off:</p>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Figure</th><th>What you'll see</th></tr></thead>
+            <tbody>
+              <tr><td>Holdings, balances and account totals</td><td>Correct. These come from the brokerage's current numbers, not from history.</td></tr>
+              <tr><td>All-time deposits, withdrawals and net deposits</td><td>Lower than Wealthsimple's app shows, because deposits made before the cut-off are missing.</td></tr>
+              <tr><td>Returns net of deposits</td><td>Measured from the first transaction VestLens has. They aren't all-time returns.</td></tr>
+              <tr><td>Activity and buy-and-sell charts</td><td>Start at the cut-off, not when the account opened.</td></tr>
+              <tr><td>TFSA and FHSA room</td><td>Incomplete for years the history doesn't fully cover. Check your room in CRA My Account and tell VestLens about earlier contributions.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Finding your own cut-off date:</strong> open the Activity view for the account. The oldest transaction listed is where VestLens's history starts. The app doesn't label that date for you yet.</p>
+      </section>
+
+      <section>
+        <h2>Other things to watch for</h2>
+        <ul class="plain">
+          <li><strong>A cancelled recurring deposit can show up as a normal deposit.</strong> It arrives through SnapTrade with nothing marking it cancelled, so deposit totals can come out too high by that amount.</li>
+          <li><strong>Dates follow UTC.</strong> A deposit made late in the evening, Toronto time, can show on the next day. Near December 31, that can move it into the next contribution year.</li>
+          <li><strong>Wealthsimple managed (Invest/Robo) accounts may not be available through SnapTrade at all.</strong> Check SnapTrade's current Wealthsimple guidance.</li>
+        </ul>
+      </section>
+
+      <!-- footer -->
+    </div>
+  </body>
+</html>

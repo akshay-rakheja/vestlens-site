@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>VestLens: your Wealthsimple portfolio in Claude and ChatGPT</title>
+    <meta name="description" content="Open-source, read-only portfolio app for Canadians. Run your own copy with your own SnapTrade key and see your Wealthsimple accounts in Claude and ChatGPT." />
+    <meta name="theme-color" content="#f4f7f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1a1f" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://vestlens.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VestLens" />
+    <meta property="og:title" content="VestLens: your Wealthsimple portfolio in Claude and ChatGPT" />
+    <meta property="og:description" content="Open-source, read-only portfolio app for Canadians. Run your own copy with your own SnapTrade key and see your Wealthsimple accounts in Claude and ChatGPT." />
+    <meta property="og:url" content="https://vestlens.com/" />
+    <meta property="og:image" content="https://vestlens.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" src="/src/site.ts"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- header -->
+      <section class="hero">
+        <h1>Your portfolio, in focus.</h1>
+        <p class="lede">VestLens puts your Wealthsimple accounts inside Claude and ChatGPT: read-only, in Canadian dollars, with the numbers Canadian investors actually need. It's open source, and you run your own copy with your own SnapTrade key.</p>
+        <div class="actions"><a class="cta" href="/setup/">How to set it up</a><a class="cta quiet" href="/limitations/">Known limitations</a></div>
+      </section>
+
+      <div class="notice" role="note">
+        <strong>The hosted service has closed.</strong>
+        <p>The version of VestLens at vestlens.com shut down on November 9, 2026. All of its user data, brokerage connections and backups were deleted. VestLens continues as an open-source project you run yourself. The code isn't public yet; <a href="/setup/">the setup page</a> will link to it when it is.</p>
+      </div>
+
+      <section id="what">
+        <h2>What you can do with it</h2>
+        <div class="grid">
+          <div class="card"><h3>Ask about your portfolio in chat</h3><p>Ask Claude or ChatGPT how your accounts are doing. Answers come with interactive charts and tables, not just text.</p></div>
+          <div class="card"><h3>See returns net of your deposits</h3><p>What your money actually earned, separate from what you put in, next to the same deposits made into an index fund.</p></div>
+          <div class="card"><h3>Track TFSA and FHSA room</h3><p>A year-by-year ledger of your contribution room, move by move, starting from your CRA My Account figure.</p></div>
+          <div class="card"><h3>Holdings, allocation and income</h3><p>What you own across accounts, how it's split, and the dividends and interest it pays.</p></div>
+          <div class="card"><h3>Every buy and sell on one chart</h3><p>A holding's price with your own trades marked on it, so you can see when you bought and when you sold.</p></div>
+          <div class="card"><h3>Canadian by default</h3><p>Amounts in CAD. US-dollar holdings are converted at the Bank of Canada rate and labelled as estimates, with the original amount kept.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><strong>Get a SnapTrade Personal key</strong><p>SnapTrade is the service VestLens uses to read your brokerage. A Personal key is free and covers your own accounts only. You connect Wealthsimple on SnapTrade's page, so VestLens never sees your Wealthsimple password.</p></li>
+          <li><strong>Run your own copy</strong><p>VestLens runs with Docker on your own computer or a small server you control. Your data stays in your copy's own database.</p></li>
+          <li><strong>Add it to Claude or ChatGPT</strong><p>Give your copy a public HTTPS address and add it as a custom connector. Your copy asks you to sign in before it shows anything.</p></li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Read-only, and yours</h2>
+        <ul class="plain">
+          <li><strong>It can't trade or move money.</strong> VestLens never calls SnapTrade's trading, order or transfer functions.</li>
+          <li><strong>One person per copy.</strong> Your copy reads only the accounts on your own SnapTrade key.</li>
+          <li><strong>Nothing comes back to us.</strong> No analytics, no tracking, and no account with the VestLens project.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Who it's for</h2>
+        <p>VestLens is for people comfortable running software themselves. You'll use a terminal, Docker and a settings file, and to use it in Claude or ChatGPT you'll need somewhere to host it. If that isn't you, Wealthsimple has announced its own official ChatGPT and Claude connections, expected in early 2027.</p>
+      </section>
+
+      <section>
+        <h2>Free tools, no setup</h2>
+        <div class="grid">
+          <a class="card" href="/tfsa-room-calculator/"><h3>TFSA room calculator →</h3><p>Your room from CRA's yearly limits, your contributions and withdrawals, and what an over-contribution costs.</p></a>
+          <a class="card" href="/tfsa-by-age/"><h3>TFSA by age →</h3><p>CRA's averages for each age group: what people hold, the room they leave unused, and how often they withdraw.</p></a>
+        </div>
+      </section>
+
+      <!-- footer -->
+    </div>
+  </body>
+</html>

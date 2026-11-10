@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TFSA contribution room calculator · VestLens</title>
+    <meta name="description" content="Work out your TFSA contribution room from CRA's yearly limits, your contributions and your withdrawals, and see what an over-contribution costs. Free, no sign-up." />
+    <meta name="theme-color" content="#f4f7f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1a1f" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://vestlens.com/tfsa-room-calculator/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VestLens" />
+    <meta property="og:title" content="TFSA contribution room calculator" />
+    <meta property="og:description" content="Your TFSA room from CRA's yearly limits, your contributions and your withdrawals. Free, no sign-up." />
+    <meta property="og:url" content="https://vestlens.com/tfsa-room-calculator/" />
+    <meta property="og:image" content="https://vestlens.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://vestlens.com/og.png" />
+    <style>
+    /* One reading column, with /tfsa-by-age's tokens. The memorable thing is the answer: one large figure that updates
+       as you type, with its arithmetic written out beneath it. */
+    :root{
+      --ink:#14212b; --paper:#f4f7f6; --surface:#ffffff; --muted:#4d5c66; --mist:#d5dfdd;
+      --aperture:#0e6b6b; --aperture-deep:#0a5252; --aperture-soft:#dcedea;
+      --focus:#7a4e0e; --focus-soft:#f6ebd8;
+      --display:"Bricolage Grotesque Variable","Avenir Next","Segoe UI",system-ui,sans-serif;
+      --body:"Source Serif 4 Variable",Georgia,"Times New Roman",serif;
+      --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    }
+    @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+      --ink:#e6eeec; --paper:#0f1a1f; --surface:#16252b; --muted:#9fb0b6; --mist:#2a3d44;
+      --aperture:#4fb8b0; --aperture-deep:#7fd3cc; --aperture-soft:#1b4243;
+      --focus:#e2b36a; --focus-soft:#3a2d17; color-scheme:dark}}
+    :root[data-theme="dark"]{
+      --ink:#e6eeec; --paper:#0f1a1f; --surface:#16252b; --muted:#9fb0b6; --mist:#2a3d44;
+      --aperture:#4fb8b0; --aperture-deep:#7fd3cc; --aperture-soft:#1b4243;
+      --focus:#e2b36a; --focus-soft:#3a2d17; color-scheme:dark}
+
+    
+    *{box-sizing:border-box}
+    [hidden]{display:none !important}
+    html{background:var(--paper)}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    p{margin:0;max-width:60ch}
+    h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+    .wrap{max-width:780px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px;display:grid;gap:56px}
+    .brand{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;text-decoration:none;justify-self:start}
+    .brand svg{flex:none}
+    .hero{display:grid;gap:18px}
+    .hero h1{font-size:clamp(34px,7vw,56px);line-height:1.02;font-weight:700;letter-spacing:-.035em;max-width:13em}
+    .lede{color:var(--muted)}
+
+    .panel{background:var(--surface);border:1px solid var(--mist);border-radius:14px;padding:clamp(20px,4vw,32px);display:grid;gap:20px}
+    .panel h2,.read h2{font-size:clamp(24px,4.4vw,32px);line-height:1.12;font-weight:700;letter-spacing:-.025em}
+    .field{display:grid;gap:6px}
+    .field label,.field legend,.check{font:600 16px/1.3 var(--display)}
+    .hint{font-size:15px;line-height:1.4;color:var(--muted)}
+    .pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    input[type=text],select{width:100%;min-height:48px;font:500 18px/1.2 var(--display);font-variant-numeric:tabular-nums;padding:10px 14px;border-radius:10px;border:1px solid var(--mist);background:var(--paper);color:var(--ink)}
+    .field input[aria-invalid="true"]{border-color:var(--focus);box-shadow:inset 0 0 0 1px var(--focus)}
+    .err{font-size:15px;color:var(--focus)}
+    .check{display:flex;gap:10px;align-items:flex-start;font-weight:500;cursor:pointer}
+    .check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--aperture);flex:none}
+    fieldset{border:0;margin:0;padding:0;display:grid;gap:10px}
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+    .chips button{min-height:40px;min-width:60px;padding:6px 10px;border-radius:9px;border:1px solid var(--mist);background:var(--paper);color:var(--ink);font:500 15px/1 var(--display);font-variant-numeric:tabular-nums;cursor:pointer}
+    .chips button[aria-pressed="true"]{background:var(--aperture);border-color:var(--aperture);color:var(--paper);font-weight:700}
+    button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+    .answer{display:grid;gap:18px}
+    .figure{display:grid;gap:2px}
+    .figure .num{font-family:var(--display);font-variant-numeric:tabular-nums;font-weight:700;letter-spacing:-.03em;font-size:clamp(52px,12vw,88px);line-height:1;color:var(--aperture)}
+    .answer.over .figure .num{color:var(--focus)}
+    .figure .what{font-size:18px;color:var(--muted)}
+    .sum{display:grid;margin:0;font-size:16.5px}
+    .sum div{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-top:1px solid var(--mist)}
+    .sum dt{margin:0}
+    .sum dd{margin:0;font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .sum .total{font-weight:700;border-top:2px solid var(--ink)}
+    .notes{display:grid;gap:12px}
+    .warn{border-left:3px solid var(--focus);padding:2px 0 2px 16px;font-size:16.5px}
+    details summary{cursor:pointer;font:600 16px/1.3 var(--display)}
+    .tbl{width:100%;max-width:340px;border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
+    .tbl th{font:600 14.5px/1.2 var(--display);color:var(--muted);text-align:left;padding:0 0 8px}
+    .tbl td{padding:6px 0;border-top:1px solid var(--mist)}
+    .tbl th:last-child,.tbl td:last-child{text-align:right}
+    details .tbl{margin-top:12px}
+    .tax{font-family:var(--display);font-size:clamp(20px,3.6vw,24px);line-height:1.3;font-weight:600;letter-spacing:-.01em}
+    .cta{display:inline-flex;align-items:center;justify-content:center;justify-self:start;font:600 16.5px/1 var(--display);padding:15px 22px;border-radius:10px;background:var(--aperture);color:var(--paper);text-decoration:none}
+    .cta:hover{background:var(--aperture-deep)}
+    .fine{font-size:14.5px;color:var(--muted)}
+    .read{display:grid;gap:16px}
+    .read h3{font-size:20px;letter-spacing:-.01em;margin-top:12px}
+    footer{display:grid;gap:10px;font-size:14px;color:var(--muted);border-top:1px solid var(--mist);padding-top:20px}
+    footer nav{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--display);font-weight:500;font-size:15px;color:var(--ink)}
+    @media (max-width:560px){.pair{grid-template-columns:minmax(0,1fr)}}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="hero">
+        <a class="brand" href="/" aria-label="VestLens home">
+          <svg width="26" height="26" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="3" />
+            <circle cx="24" cy="24" r="12" fill="none" stroke="var(--aperture)" stroke-width="3" />
+            <polyline points="9,31 18,25 25,28 39,15" fill="none" stroke="var(--aperture)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>VestLens</a>
+        <h1>TFSA contribution room calculator</h1>
+        <p class="lede">Work out your room from CRA's yearly limits, your contributions and your withdrawals. No sign-up, and what you type stays in your browser.</p>
+      </header>
+
+      <section class="panel" aria-label="Your details">
+        <div class="field">
+          <label for="birthYear">Year you were born</label>
+          <input type="text" id="birthYear" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="1990" />
+          <p class="err" id="birthYearErr" role="alert" hidden></p>
+        </div>
+        <label class="check"><input type="checkbox" id="movedHere" /> I became a Canadian resident after turning 18</label>
+        <div class="field" id="movedField" hidden>
+          <label for="residentSince">Year you became a resident</label>
+          <input type="text" id="residentSince" inputmode="numeric" maxlength="4" autocomplete="off" />
+          <p class="err" id="residentSinceErr" role="alert" hidden></p>
+        </div>
+        <label class="check"><input type="checkbox" id="wasAway" /> I was a non-resident for one or more full calendar years</label>
+        <fieldset id="awayField" hidden>
+          <legend>Tap each full year you weren't a resident</legend>
+          <div class="chips" id="awayYears"></div>
+          <p class="hint">A year you were a resident for even part of still counts in full.</p>
+        </fieldset>
+        <div class="field">
+          <label for="contributed">Total contributed since you started</label>
+          <input type="text" id="contributed" inputmode="decimal" autocomplete="off" placeholder="$0" />
+          <p class="hint">Across all your TFSAs, including this year. Leave out direct transfers between your TFSAs, and don't count investment growth.</p>
+          <p class="err" id="contributedErr" role="alert" hidden></p>
+        </div>
+        <div class="pair">
+          <div class="field">
+            <label for="withdrawnBefore">Withdrawn before <span class="thisYear">2026</span></label>
+            <input type="text" id="withdrawnBefore" inputmode="decimal" autocomplete="off" placeholder="$0" />
+            <p class="err" id="withdrawnBeforeErr" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="withdrawnNow">Withdrawn in <span class="thisYear">2026</span></label>
+            <input type="text" id="withdrawnNow" inputmode="decimal" autocomplete="off" placeholder="$0" />
+            <p class="err" id="withdrawnNowErr" role="alert" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="answer" id="answer" aria-live="polite">
+        <div class="figure">
+          <span class="num" id="roomFigure">—</span>
+          <span class="what" id="roomWhat">Enter the year you were born to see your room.</span>
+        </div>
+        <dl class="sum" id="sum" hidden>
+          <div><dt id="limitsLabel"></dt><dd id="limitsValue"></dd></div>
+          <div><dt>Plus withdrawals from earlier years</dt><dd id="backValue"></dd></div>
+          <div><dt>Minus contributions</dt><dd id="contribValue"></dd></div>
+          <div class="total"><dt id="totalLabel"></dt><dd id="totalValue"></dd></div>
+        </dl>
+        <div class="notes">
+          <p class="warn" id="overNote" hidden></p>
+          <p class="warn" id="backNote" hidden></p>
+          <p class="warn" id="missingNote" hidden></p>
+          <p class="warn" id="awayNote" hidden>Contributions made while you were a non-resident are taxed separately, and CRA's pages differ on when withdrawals made then come back. Check this figure with CRA.</p>
+          <p class="fine">This is an estimate from what you entered. CRA My Account shows CRA's own figure, though it may not include this year's activity yet.</p>
+        </div>
+        <details id="yearsBox" hidden>
+          <summary>See the limit counted for each year</summary>
+          <table class="tbl"><thead><tr><th>Year</th><th>Limit</th></tr></thead><tbody id="yearsRows"></tbody></table>
+        </details>
+      </section>
+
+      <section class="panel" aria-labelledby="taxTitle">
+        <h2 id="taxTitle">What going over costs</h2>
+        <p>CRA charges 1% a month on the highest amount you're over in that month, for each month it stays in your account.</p>
+        <div class="field">
+          <label for="overAmount">Amount over</label>
+          <input type="text" id="overAmount" inputmode="decimal" autocomplete="off" placeholder="$2,000" />
+          <p class="err" id="overAmountErr" role="alert" hidden></p>
+        </div>
+        <div class="pair">
+          <div class="field">
+            <label for="overStart">Month you went over</label>
+            <select id="overStart"></select>
+          </div>
+          <div class="field">
+            <label for="overEnd">Month it comes out</label>
+            <select id="overEnd"></select>
+          </div>
+        </div>
+        <p class="tax" id="taxOut" aria-live="polite">Enter an amount to see the tax.</p>
+        <p class="fine">This covers one amount within one calendar year, and the month it comes out is charged in full. CRA says excess amounts from a deliberate over-contribution may be taxed at a 100% rate. If you owe this tax, CRA says to file Form RC243 by June 30 of the following year. <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/tax-free-savings-account/owing-tax/excess.html">CRA's page on excess amounts</a></p>
+      </section>
+
+      <section class="panel">
+        <h2>Rather not add it up by hand?</h2>
+        <p>VestLens is an open-source app you run yourself. With your Wealthsimple accounts connected through your own SnapTrade key, it works out your TFSA year move by move: each deposit, withdrawal and transfer, the room it used, and the day you went over, if you did. It starts from your room on January 1 in CRA My Account. Wealthsimple history before about April 2023 isn't available to it, so check <a href="/limitations/">its limitations</a> first.</p>
+        <a class="cta" href="/">See what VestLens does</a>
+        <p class="fine">Read-only: VestLens can't trade or move money. You sign in to your brokerage on SnapTrade's page, never in VestLens.</p>
+      </section>
+
+      <section class="read">
+        <h2>How TFSA room works</h2>
+        <p>Your room is this year's limit, plus any room you didn't use in earlier years, plus what you withdrew last year, minus what you've contributed this year. Gains, losses and fees don't change it.</p>
+        <h3>When room starts</h3>
+        <p>It starts the year you turn 18, and that year's full limit counts even if your birthday is in December. It keeps adding up whether or not you've opened a TFSA. In some provinces you have to be 19 to open one, but you keep the room from the year you turned 18. New residents start from the year they became a resident.</p>
+        <h3>When withdrawals come back</h3>
+        <p>On January 1 of the next year, not right away. Putting money back in the same year uses this year's room, and if you don't have enough, it's an over-contribution even if it was a mistake. The exception is a withdrawal made while you're over: it lowers the excess right away, and only the rest comes back on January 1.</p>
+        <h3>Transfers between TFSAs</h3>
+        <p>A direct transfer between your own TFSAs doesn't change your room. If you withdraw the money and deposit it yourself, it counts as a withdrawal and a new contribution.</p>
+        <h3>TFSA limits by year</h3>
+        <table class="tbl">
+          <thead><tr><th>Year</th><th>Limit</th></tr></thead>
+          <tbody>
+              <tr><td>2009</td><td>$5,000</td></tr>
+              <tr><td>2010</td><td>$5,000</td></tr>
+              <tr><td>2011</td><td>$5,000</td></tr>
+              <tr><td>2012</td><td>$5,000</td></tr>
+              <tr><td>2013</td><td>$5,500</td></tr>
+              <tr><td>2014</td><td>$5,500</td></tr>
+              <tr><td>2015</td><td>$10,000</td></tr>
+              <tr><td>2016</td><td>$5,500</td></tr>
+              <tr><td>2017</td><td>$5,500</td></tr>
+              <tr><td>2018</td><td>$5,500</td></tr>
+              <tr><td>2019</td><td>$6,000</td></tr>
+              <tr><td>2020</td><td>$6,000</td></tr>
+              <tr><td>2021</td><td>$6,000</td></tr>
+              <tr><td>2022</td><td>$6,000</td></tr>
+              <tr><td>2023</td><td>$6,500</td></tr>
+              <tr><td>2024</td><td>$7,000</td></tr>
+              <tr><td>2025</td><td>$7,000</td></tr>
+              <tr><td>2026</td><td>$7,000</td></tr>
+          </tbody>
+        </table>
+        <p class="fine">From CRA, read November 2, 2026. This table gets a new row once CRA publishes the next year's limit. Rules: <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/tax-free-savings-account/contributing/calculate-room.html">calculating your room</a>, <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/tax-free-savings-account/contributing/before.html">before you contribute</a>, <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/tax-free-savings-account/withdraw.html">withdrawals</a>.</p>
+      </section>
+
+      <footer>
+        <nav aria-label="VestLens"><a href="/">VestLens</a><a href="/tfsa-by-age/">TFSA by age</a><a href="/privacy/">Privacy</a><a href="mailto:support@vestlens.com">support@vestlens.com</a></nav>
+        <p>VestLens isn't affiliated with the Canada Revenue Agency or Wealthsimple. This page explains published rules and does arithmetic on what you enter; it isn't financial or tax advice.</p>
+      </footer>
+    </div>
+    <script type="module" src="/src/tfsa-room-calculator/main.ts"></script>
+  </body>
+</html>

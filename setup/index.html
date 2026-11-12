@@ -29,31 +29,62 @@
       </section>
 
       <div class="notice" role="note">
-        <strong>Coming soon.</strong>
-        <p>The open-source code is being prepared for release. This page will have the full steps and a link to the repository once it's published.</p>
+        <strong>The code is public.</strong>
+        <p>VestLens is on GitHub at <a href="https://github.com/akshay-rakheja/vestlens">github.com/akshay-rakheja/vestlens</a>, MIT licensed. Its README has every step and option; this page is the short version.</p>
       </div>
 
       <section>
         <h2>What you'll need</h2>
         <ul class="plain">
-          <li><strong>A computer or small server that runs Docker.</strong> VestLens starts with Docker Compose and keeps its data in its own database.</li>
-          <li><strong>A SnapTrade Personal key.</strong> It's free, it's for one person, and it covers your own accounts only. You'll copy its client ID and consumer key into your copy's settings file.</li>
-          <li><strong>Your Wealthsimple login</strong>, which you'll enter on SnapTrade's page when you connect, never in VestLens.</li>
+          <li><strong>A computer or small server that runs Docker</strong>, with Docker Compose 2.24.4 or newer. VestLens starts with Docker Compose and keeps its data in its own database.</li>
+          <li><strong>Node 22 or newer and Git.</strong> Node is only for the one-time setup command that creates your sign-in password.</li>
+          <li><strong>A SnapTrade Personal key</strong>, for your own accounts only. Get it at <a href="https://snaptrade.com/personal">snaptrade.com/personal</a> and check <a href="https://snaptrade.com/pricing">SnapTrade's pricing page</a> for current terms before you sign up. You'll copy its client ID and consumer key into your copy's settings file.</li>
+          <li><strong>Your Wealthsimple login</strong>, which you'll enter on SnapTrade's page when you connect, never in VestLens and never in a chat.</li>
           <li><strong>A public HTTPS address, for Claude or ChatGPT.</strong> Both assistants reach connectors from their own servers, so a copy that only runs on your computer works in your browser but not in chat. A tunnel or a small cloud host gives you that address.</li>
           <li><strong>Some comfort with a terminal.</strong> There's no installer.</li>
         </ul>
       </section>
 
       <section>
-        <h2>What setup will look like</h2>
+        <h2>Set it up</h2>
+        <p class="muted">Run these in a real terminal (the Terminal app), not in a chat box.</p>
         <ol class="steps">
-          <li><strong>Download VestLens</strong><p>Clone the repository from GitHub.</p></li>
-          <li><strong>Add your key</strong><p>Put your SnapTrade Personal key and a sign-in password in the settings file.</p></li>
-          <li><strong>Start it</strong><p>Run it with Docker Compose and sign in to your copy.</p></li>
-          <li><strong>Connect Wealthsimple</strong><p>Follow the link to SnapTrade's page and connect read-only.</p></li>
-          <li><strong>Add it to your assistant</strong><p>Add your copy's address as a custom connector in Claude or ChatGPT.</p></li>
+          <li><strong>Download VestLens</strong>
+            <div>
+              <pre><code>git clone https://github.com/akshay-rakheja/vestlens.git
+cd vestlens
+cp .env.example .env</code></pre>
+            </div>
+          </li>
+          <li><strong>Add your key</strong><p>Open <code>.env</code> in your editor and replace the two placeholders, <code>SNAPTRADE_CLIENT_ID</code> and <code>SNAPTRADE_CONSUMER_KEY</code>, with your SnapTrade Personal values.</p></li>
+          <li><strong>Choose your sign-in password</strong>
+            <div>
+              <p>Save a password of at least 12 characters in your password manager, then type it at this hidden prompt. <code>.env</code> keeps only a hash of it.</p>
+              <pre><code>read -rs OWNER_PASSWORD &amp;&amp; printf '%s\n' "$OWNER_PASSWORD" | npm run setup -- --password-stdin; unset OWNER_PASSWORD</code></pre>
+            </div>
+          </li>
+          <li><strong>Start it</strong>
+            <div>
+              <pre><code>docker compose up -d</code></pre>
+              <p>Open <code>http://localhost:8080</code> and sign in with that password.</p>
+            </div>
+          </li>
+          <li><strong>Connect Wealthsimple</strong><p>From the dashboard, follow the link to SnapTrade's page and connect read-only. The first sync takes a few minutes.</p></li>
+          <li><strong>Give it an HTTPS address</strong>
+            <div>
+              <p>To try it today, a Cloudflare Quick Tunnel needs no account (it's for testing, and its address changes every time):</p>
+              <pre><code>cloudflared tunnel --url http://localhost:8080</code></pre>
+              <p>Put the <code>https://….trycloudflare.com</code> address it prints in <code>.env</code> as <code>APP_BASE_URL</code>, add <code>TRUST_PROXY=1</code>, and run <code>docker compose up -d</code> again. For an address that stays put, the README covers a named Cloudflare Tunnel and Render.</p>
+            </div>
+          </li>
+          <li><strong>Add it to your assistant</strong><p>Add <code>&lt;your address&gt;/mcp</code> as a custom connector in Claude or ChatGPT. Sign in with your VestLens password, then click Allow.</p></li>
         </ol>
-        <p class="muted">This is an outline. The exact commands will be here when the code is published.</p>
+        <p><a class="cta" href="https://github.com/akshay-rakheja/vestlens#install">Full steps in the README</a></p>
+      </section>
+
+      <section>
+        <h2>Or let a coding agent do it</h2>
+        <p>Point an AI coding agent at the README. It can run everything except the parts that need you: pasting your SnapTrade key, choosing your password in your own terminal, logging in to Wealthsimple on SnapTrade's page, and clicking Allow. Never give an agent your brokerage password or two-step codes.</p>
       </section>
 
       <section>
